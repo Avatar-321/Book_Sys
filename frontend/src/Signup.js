@@ -2,24 +2,20 @@ import React, { useState } from 'react';
 import validation from './Signupval'; 
 import backgroundImage from './bg1.jpg'; 
 
+
 function Signup() {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState({}); // State for errors
 
-    
-
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Perform data validation
-        const values = { username, email, password };
-        const errors = validation(values);
-        if (Object.keys(errors).length > 0) {
-            setError(errors);
-            return;
-        }
+        // if (!username || !email || !password) {
+        //     Notyf.error("All fields are required");
+        //     return;
+        // }
 
         try {
             const response = await fetch("http://localhost:3001/signup", {
@@ -27,20 +23,52 @@ function Signup() {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ username, email, password }),
+                body: JSON.stringify({ username, email, password, role: 'user' }),
             });
 
-            const data = await response.text();
+            // Handle response as JSON
+            const data = await response.json();
             console.log(data);
-            window.location.href = "/";
 
-            // setTimeout(() => {
-            //     window.location.href = "/";
-            // }, 3000);
+            setTimeout(() => {
+                window.location.href = "/";
+            }, 3000);
         } catch (error) {
             console.error("Error:", error);
         }
     };
+
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+
+    //     // Perform data validation
+    //     const values = { username, email, password };
+    //     const errors = validation(values);
+    //     if (Object.keys(errors).length > 0) {
+    //         setError(errors);
+    //         return;
+    //     }
+
+    //     try {
+    //         const response = await fetch("http://localhost:3001/signup", {
+    //             method: "POST",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //             },
+    //             body: JSON.stringify({ username, email, password }),
+    //         });
+
+    //         const data = await response.text();
+    //         console.log(data);
+    //         window.location.href = "/";
+
+    //         // setTimeout(() => {
+    //         //     window.location.href = "/";
+    //         // }, 3000);
+    //     } catch (error) {
+    //         console.error("Error:", error);
+    //     }
+    // };
 
     return (
         <div style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

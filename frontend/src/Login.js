@@ -35,27 +35,58 @@ function Login() {
     const handleInput = (event) => {
         setValues(prev => ({ ...prev, [event.target.name]: event.target.value }));
     };
-
     const handleSubmit = (e) => {
         e.preventDefault();
-        setError({});
         
-        // Perform data validation
-        const errors = validation(values);
-        if (Object.keys(errors).length > 0) {
-            setError(errors);
+        setError({}); // Reset any previous errors
+
+        // Validate email and password
+        if (!values.email || !values.password) {
+            setError({ message: 'Please enter both email and password' });
             return;
         }
 
+        // Send login request to the server
         axios.post('http://localhost:3001/login', values)
             .then(res => {
                 console.log(res.data);
-                navigate('/Home');
+                
+                // Check if login was successful
+                if (res.data.success) {
+                    // Redirect to the dashboard on successful login
+                    navigate('/Home');
+                } else {
+                    // Display error message if login failed
+                    setError({ message: 'Invalid email or password' });
+                }
             })
             .catch(error => {
-                setError({ message: error.response.data.message });
+                // Display error message for any other errors
+                setError({ message: 'An error occurred. Please try again later' });
             });
     };
+
+
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
+    //     setError({});
+        
+    //     // Perform data validation
+    //     const errors = validation(values);
+    //     if (Object.keys(errors).length > 0) {
+    //         setError(errors);
+    //         return;
+    //     }
+
+    //     axios.post('http://localhost:3001/login', values)
+    //         .then(res => {
+    //             console.log(res.data);
+    //             navigate('/Home');
+    //         })
+    //         .catch(error => {
+    //             setError({ message: error.response.data.message });
+    //         });
+    // };
 
     return (
          <div style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

@@ -72,7 +72,7 @@ app.post('/login', (req, res) => {
     });
 });
 
-// Create feedback table if not exists
+
 const createFeedbackTable = `
     CREATE TABLE IF NOT EXISTS feedback (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -91,7 +91,6 @@ db.query(createFeedbackTable, (err) => {
 });
 
 
-// Endpoint for submitting feedback
 app.post('/feedback', (req, res) => {
     const { name, email, feedback } = req.body;
     const insertFeedbackQuery = `INSERT INTO feedback (name, email, feedback) VALUES (?, ?, ?)`;
