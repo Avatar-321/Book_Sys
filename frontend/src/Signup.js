@@ -12,8 +12,11 @@ function Signup() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // if (!username || !email || !password) {
-        //     Notyf.error("All fields are required");
+        // //Perform data validation
+        // const values = { username, email, password };
+        // const errors = validation(values);
+        // if (Object.keys(errors).length > 0) {
+        //     setError(errors);
         //     return;
         // }
 
@@ -23,7 +26,7 @@ function Signup() {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ username, email, password, role: 'user' }),
+                body: JSON.stringify({ username, email, password }),
             });
 
             // Handle response as JSON
@@ -38,37 +41,7 @@ function Signup() {
         }
     };
 
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
 
-    //     // Perform data validation
-    //     const values = { username, email, password };
-    //     const errors = validation(values);
-    //     if (Object.keys(errors).length > 0) {
-    //         setError(errors);
-    //         return;
-    //     }
-
-    //     try {
-    //         const response = await fetch("http://localhost:3001/signup", {
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //             },
-    //             body: JSON.stringify({ username, email, password }),
-    //         });
-
-    //         const data = await response.text();
-    //         console.log(data);
-    //         window.location.href = "/";
-
-    //         // setTimeout(() => {
-    //         //     window.location.href = "/";
-    //         // }, 3000);
-    //     } catch (error) {
-    //         console.error("Error:", error);
-    //     }
-    // };
 
     return (
         <div style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

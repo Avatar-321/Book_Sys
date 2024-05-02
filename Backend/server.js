@@ -17,13 +17,27 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 
-const db = mysql.createConnection({
+const DB_CONFIG = {
     host: 'localhost',
     user: 'root',
     password: '', 
     database: 'booksys'
-});
+};
 
+function validateConnectionParams(config) {
+    if (!config.host || !config.user || !config.database) {
+        throw new Error('Incomplete MySQL connection parameters. Please provide host, user, and database.');
+    } 
+}
+
+try {
+    validateConnectionParams(DB_CONFIG);
+} catch (error) {
+    console.error('Error validating MySQL connection parameters:', error.message);
+    process.exit(1); 
+}
+
+const db = mysql.createConnection(DB_CONFIG);
 
 db.connect((err) => {
     if (err) {
@@ -32,6 +46,7 @@ db.connect((err) => {
     }
     console.log('Connected to MySQL database');
 });
+
 
 // Route to handle signup form submission
 app.post('/signup', (req, res) => {
@@ -45,9 +60,15 @@ app.post('/signup', (req, res) => {
             return res.status(500).json({ error: 'Internal server error' });
         }
         console.log('Data inserted successfully:', result);
-        return res.json({ success: true });
+        const user = {
+            id: result.insertId,
+            email: email,
+            username: username
+        };
+        return res.status(200).json({ success: true, user: user });
     });
 });
+
 
 
 
