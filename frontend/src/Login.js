@@ -67,26 +67,6 @@ function Login() {
     };
 
 
-    // const handleSubmit = (e) => {
-    //     e.preventDefault();
-    //     setError({});
-        
-    //     // Perform data validation
-    //     const errors = validation(values);
-    //     if (Object.keys(errors).length > 0) {
-    //         setError(errors);
-    //         return;
-    //     }
-
-    //     axios.post('http://localhost:3001/login', values)
-    //         .then(res => {
-    //             console.log(res.data);
-    //             navigate('/Home');
-    //         })
-    //         .catch(error => {
-    //             setError({ message: error.response.data.message });
-    //         });
-    // };
 
     return (
          <div style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
