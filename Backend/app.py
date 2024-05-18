@@ -7,7 +7,7 @@ import json
 
 app = Flask(__name__)
 CORS(app, origins='http://localhost:3000') 
- 
+
 # Load your data and models
 popular_df = pickle.load(open('popular.pkl', 'rb'))
 pt = pickle.load(open('pt.pkl', 'rb'))
@@ -16,28 +16,27 @@ similarity_scores = pickle.load(open('knn_model.pkl', 'rb'))
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-   topBooks = [
-     {
-        'book_name': row['Book-Title'],
-        'author': row['Book-Author'],
-        'image': row['Image-URL-M'],
-        'votes': int(row['num_ratings']),
-        'rating': float(row['avg_rating'])
-    }
-    for index, row in popular_df.iterrows()
-]
-   return jsonify(topBooks)
+    topBooks = [
+        {
+            'book_name': row['Book-Title'],
+            'author': row['Book-Author'],
+            'image': row['Image-URL-M'],
+            'votes': int(row['num_ratings']),
+            'rating': float(row['avg_rating'])
+        }
+        for index, row in popular_df.iterrows()
+    ]
+    return jsonify(topBooks)
 
-
-@app.route('/recommend', methods=['GET', 'POST'])
+@app.route('/recommend', methods=['POST'])
 def recommend():
     if request.method == 'POST':
-       
         user_input = request.json.get('user_input')
 
+        # Check if the user_input is in the dataset
         indices = np.where(pt.index == user_input)[0]
         if len(indices) == 0:
-            return jsonify({"error": "User input not found in dataset"})
+            return jsonify({"error": "Book is not available yet", "data": []})
 
         index = indices[0]
         distances, similar_items_indices = similarity_scores.kneighbors([pt.iloc[index]])
@@ -53,24 +52,7 @@ def recommend():
             data.append(item)
 
         print("Recommendations:", data)
-        return json.dumps(data)
-    
-    elif request.method == 'GET':
-       
-        initial_recommendations = get_initial_recommendations()  
-        return jsonify(initial_recommendations)
-
-def get_initial_recommendations():
-    # Define logic to fetch initial recommendations
-    # For example, you can return the first few recommendations from your dataset
-    initial_recommendations = []
-    for i in range(5):
-        item = {}
-        item['title'] = books.iloc[i]['Book-Title']
-        item['author'] = books.iloc[i]['Book-Author']
-        item['image_url'] = books.iloc[i]['Image-URL-M']
-        initial_recommendations.append(item)
-    return initial_recommendations
+        return jsonify(data)
 
 if __name__ == '__main__':
     app.run(debug=True)
